@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import os
 
 import pandas as pd
 
@@ -20,6 +21,8 @@ def main(opt: argparse.Namespace):
     curr_time = datetime.datetime.utcnow() + datetime.timedelta(hours=8)
     curr_time = curr_time.strftime("%Y-%m-%d %H.%M.%S")
     
+    if os.path.exists(opt.new_stopwords):
+        os.remove(opt.new_stopwords)
     # menyimpan csv berdasarkan waktu
     stopwords_full.to_csv(f"{curr_time} stopwords_twitter.csv", index=False)
     
@@ -28,7 +31,7 @@ if __name__=="__main__":
     parser.add_argument("--old_csv", type=str, help="File csv yang menyimpan stopwords lama", default="./stopwords_twitter.csv")
     # parser.add_argument("--new_csv", type=str, help="Nama File yang digunakan untuk menamakan file csv stopwords baru", default="./datex stopwords_twitter.csv")
     parser.add_argument("--new_stopwords", type=str, required=True, help="File txt yang berisikan stopwords baru untuk ditambahkan ke list stopwords")
+    parser.add_argument("--delete_txt", action="store_false", help="Menghapus file txt yang digunakan setelah menggabungkan file csv")
     
     opt = parser.parse_args()
-    print(type(opt))
     main(opt)
